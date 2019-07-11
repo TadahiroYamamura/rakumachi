@@ -21,8 +21,7 @@ class Rakumachi:
 
     def search(self, **queries):
         with WebDriverWrapper(self.debug) as driver:
-            if self._credentials is not None:
-                Rakumachi.login(driver, self._credentials)
+            Rakumachi.login(driver, self._credentials)
             driver.get(Rakumachi.build_search_url(queries))
             while True:
                 for house in driver.find_element_by_class_name("propertyBlock"):
@@ -40,6 +39,8 @@ class Rakumachi:
 
     @staticmethod
     def login(driver, credential):
+        if credential is None:
+            return
         driver.get("https://www.rakumachi.jp/my/")
         driver.find_element_by_id("login_e_mail").send_keys(credential.user)
         driver.find_element_by_id("login_password").send_keys(credential.password)
